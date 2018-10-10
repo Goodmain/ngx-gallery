@@ -2,6 +2,8 @@
   "name": "ngx-gallery",
   "version": "5.6.2",
   "description": "Responsive Angular 2 / 4 image gallery plugin",
+  "main": "dist/bundles/ngx-gallery.umd.js",
+  "module": "dist/index.js",
   "scripts": {
     "prepare": "gulp build",
     "prepare:watch": "gulp",
