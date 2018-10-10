@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, HostListener,  ElementRef, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { SafeResourceUrl, DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 import { NgxGalleryHelperService } from './ngx-gallery-helper.service';
 import { NgxGalleryOrderedImage } from './ngx-gallery-ordered-image.model';
@@ -9,11 +9,12 @@ import { NgxGalleryAction } from './ngx-gallery-action.model';
 @Component({
     selector: 'ngx-gallery-image',
     template: `
-        <div class="ngx-gallery-image-wrapper ngx-gallery-animation-{{animation}} ngx-gallery-image-size-{{size}}">
+        <div class="ngx-gallery-image-test ngx-gallery-image-wrapper ngx-gallery-animation-{{animation}} ngx-gallery-image-size-{{size}}">
             <div class="ngx-gallery-image" *ngFor="let image of getImages(); let i = index;" [ngClass]="{ 'ngx-gallery-active': selectedIndex == image.index, 'ngx-gallery-inactive-left': selectedIndex > image.index, 'ngx-gallery-inactive-right': selectedIndex < image.index, 'ngx-gallery-clickable': clickable }" [style.background-image]="getSafeUrl(image.src)" (click)="handleClick($event, image.index)">
                 <div class="ngx-gallery-icons-wrapper">
                     <ngx-gallery-action *ngFor="let action of actions" [icon]="action.icon" [disabled]="action.disabled" [titleText]="action.titleText" (onClick)="action.onClick($event, image.index)"></ngx-gallery-action>
                 </div>
+                <ngx-gallery-point *ngFor="let point of image.points" [point]="point" [ngStyle]="{'position': 'absolute', 'left.px': point.x, 'top.px': point.y}"></ngx-gallery-point>
                 <div class="ngx-gallery-image-text" *ngIf="showDescription && descriptions[image.index]" [innerHTML]="descriptions[image.index]"></div>
             </div>
         </div>

@@ -248,6 +248,7 @@ export class NgxGalleryComponent implements OnInit, DoCheck, AfterViewInit   {
         this.smallImages = this.images.map((img) => <string>img.small);
         this.mediumImages = this.images.map((img, i) => new NgxGalleryOrderedImage({
             src: img.medium,
+            points: img.points,
             index: i
         }));
         this.bigImages = this.images.map((img) => <string>img.big);
