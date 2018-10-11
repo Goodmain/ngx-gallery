@@ -14,10 +14,6 @@ export class NgxGalleryPointComponent {
     @Input() point: INgxGalleryPoint;
     @Output() onClick = new EventEmitter<INgxGalleryPoint>();
 
-    constructor() {
-        console.log('kjhdfgjghjdfh');
-    }
-
     handleClick(): void {
         this.onClick.emit(this.point);
     }

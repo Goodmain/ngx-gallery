@@ -38,7 +38,7 @@ export class NgxGalleryComponent implements OnInit, DoCheck, AfterViewInit   {
 
     smallImages: string[] | SafeResourceUrl[];
     mediumImages: NgxGalleryOrderedImage[];
-    bigImages: string[] | SafeResourceUrl[];
+    bigImages: NgxGalleryOrderedImage[];
     descriptions: string[];
     links: string[];
     labels: string[];
@@ -251,7 +251,11 @@ export class NgxGalleryComponent implements OnInit, DoCheck, AfterViewInit   {
             points: img.points,
             index: i
         }));
-        this.bigImages = this.images.map((img) => <string>img.big);
+        this.bigImages = this.images.map((img, i) => new NgxGalleryOrderedImage({
+            src: <string>img.big,
+            points: img.points,
+            index: i
+        }));
         this.descriptions = this.images.map((img) => <string>img.description);
         this.links = this.images.map((img) => <string>img.url);
         this.labels = this.images.map((img) => <string>img.label);

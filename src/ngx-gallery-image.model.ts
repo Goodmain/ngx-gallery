@@ -30,7 +30,7 @@ export class NgxGalleryImage implements INgxGalleryImage {
         this.big = obj.big;
         this.description = obj.description;
         this.url = obj.url;
-        this.label = obj.label;console.log('image', obj);
+        this.label = obj.label;
 
         if (obj && obj.points && obj.points.length) {
             obj.points = obj.points.map(point => new NgxGalleryPoint(point));

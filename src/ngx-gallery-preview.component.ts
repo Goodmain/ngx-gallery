@@ -1,8 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ElementRef, HostListener, ViewChild, Renderer } from '@angular/core';
-import { SafeResourceUrl, DomSanitizer, SafeUrl, SafeStyle } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl, SafeStyle } from '@angular/platform-browser';
 
 import { NgxGalleryAction } from './ngx-gallery-action.model';
 import { NgxGalleryHelperService } from './ngx-gallery-helper.service';
+import { NgxGalleryOrderedImage } from './ngx-gallery-ordered-image.model';
+import { NgxGalleryPoint } from './ngx-gallery-point.model';
 
 @Component({
     selector: 'ngx-gallery-preview',
@@ -28,6 +30,7 @@ import { NgxGalleryHelperService } from './ngx-gallery-helper.service';
         <div class="ngx-gallery-preview-wrapper" (click)="closeOnClick && close()" (mouseup)="mouseUpHandler($event)" (mousemove)="mouseMoveHandler($event)" (touchend)="mouseUpHandler($event)" (touchmove)="mouseMoveHandler($event)">
             <div class="ngx-gallery-preview-img-wrapper">
                 <img *ngIf="src" #previewImage class="ngx-gallery-preview-img ngx-gallery-center" [src]="src" (click)="$event.stopPropagation()" (mouseenter)="imageMouseEnter()" (mouseleave)="imageMouseLeave()" (mousedown)="mouseDownHandler($event)" (touchstart)="mouseDownHandler($event)" [class.ngx-gallery-active]="!loading" [class.animation]="animation" [class.ngx-gallery-grab]="canDragOnZoom()" [style.transform]="getTransform()" [style.left]="positionLeft + 'px'" [style.top]="positionTop + 'px'"/>
+                <ngx-gallery-point *ngFor="let point of points" [point]="point" [ngStyle]="{'position': 'absolute', 'left.%': point.x, 'top.%': point.y}"></ngx-gallery-point>
             </div>
             <div class="ngx-gallery-preview-text" *ngIf="showDescription && description" [innerHTML]="description"></div>
         </div>
@@ -38,6 +41,7 @@ export class NgxGalleryPreviewComponent implements OnChanges {
 
     src: SafeUrl;
     srcIndex: number;
+    points: NgxGalleryPoint[] = [];
     description: string;
     showSpinner = false;
     positionLeft = 0;
@@ -47,7 +51,7 @@ export class NgxGalleryPreviewComponent implements OnChanges {
     rotateValue = 0;
     index = 0;
 
-    @Input() images: string[] | SafeResourceUrl[];
+    @Input() images: NgxGalleryOrderedImage[];
     @Input() descriptions: string[];
     @Input() showDescription: boolean;
     @Input() swipe: boolean;
@@ -393,9 +397,10 @@ export class NgxGalleryPreviewComponent implements OnChanges {
         this.rotateValue = 0;
         this.resetPosition();
 
-        this.src = this.getSafeUrl(<string>this.images[this.index]);
+        this.src = this.getSafeUrl(<string>this.images[this.index].src);
         this.srcIndex = this.index;
         this.description = this.descriptions[this.index];
+        this.points = this.images[this.srcIndex].points || [];
 
         setTimeout(() => {
             if (this.isLoaded(this.previewImage.nativeElement)) {

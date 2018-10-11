@@ -14,7 +14,7 @@ import { NgxGalleryAction } from './ngx-gallery-action.model';
                 <div class="ngx-gallery-icons-wrapper">
                     <ngx-gallery-action *ngFor="let action of actions" [icon]="action.icon" [disabled]="action.disabled" [titleText]="action.titleText" (onClick)="action.onClick($event, image.index)"></ngx-gallery-action>
                 </div>
-                <ngx-gallery-point *ngFor="let point of image.points" [point]="point" [ngStyle]="{'position': 'absolute', 'left.px': point.x, 'top.px': point.y}"></ngx-gallery-point>
+                <ngx-gallery-point *ngFor="let point of image.points" [point]="point" [ngStyle]="{'position': 'absolute', 'left.%': point.x, 'top.%': point.y}"></ngx-gallery-point>
                 <div class="ngx-gallery-image-text" *ngIf="showDescription && descriptions[image.index]" [innerHTML]="descriptions[image.index]"></div>
             </div>
         </div>
