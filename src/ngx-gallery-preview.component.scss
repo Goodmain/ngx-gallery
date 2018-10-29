@@ -23,6 +23,8 @@
     max-height: 90%;
     user-select: none;
     transition: transform .5s;
+    background-repeat: no-repeat;
+    background-position: center;
 
     &.animation {
         transition: opacity 0.5s linear, transform .5s;
