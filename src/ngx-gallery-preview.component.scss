@@ -110,4 +110,13 @@
 .ngx-gallery-preview-img-wrapper {
     flex: 1 1 auto;
     position: relative;
+
+    .ngx-points-container {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        top: 0;
+    }
 }

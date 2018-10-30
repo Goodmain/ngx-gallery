@@ -29,9 +29,10 @@ import { NgxGalleryPoint } from './ngx-gallery-point.model';
         </div>
         <div class="ngx-gallery-preview-wrapper" (click)="closeOnClick && close()" (mouseup)="mouseUpHandler($event)" (mousemove)="mouseMoveHandler($event)" (touchend)="mouseUpHandler($event)" (touchmove)="mouseMoveHandler($event)">
             <div class="ngx-gallery-preview-img-wrapper">
-              <div *ngIf="src"
+              <img *ngIf="src"
                    #previewImage
                    class="ngx-gallery-preview-img ngx-gallery-center"
+                   [src]="src"
                    (click)="$event.stopPropagation()"
                    (mouseenter)="imageMouseEnter()"
                    (mouseleave)="imageMouseLeave()"
@@ -40,11 +41,16 @@ import { NgxGalleryPoint } from './ngx-gallery-point.model';
                    [class.ngx-gallery-active]="!loading"
                    [class.animation]="animation"
                    [class.ngx-gallery-grab]="canDragOnZoom()"
-                   [style.background]="'url(' + src + ')'"
                    [style.transform]="getTransform()"
                    [style.left]="positionLeft + 'px'"
-                   [style.top]="positionTop + 'px'"></div>
+                   [style.top]="positionTop + 'px'"/>
+              <div *ngIf="src && isImageLoaded"
+                   #pointsView
+                   class="ngx-points-container"
+                   [style.width]="getPointsContainerWidth()"
+                   [style.height]="getPointsContainerHeight()">
                 <ngx-gallery-point *ngFor="let point of points" [point]="point" [ngStyle]="{'position': 'absolute', 'left.%': point.x, 'top.%': point.y}"></ngx-gallery-point>
+              </div>
             </div>
             <div class="ngx-gallery-preview-text" *ngIf="showDescription && description" [innerHTML]="description"></div>
         </div>
@@ -102,6 +108,7 @@ export class NgxGalleryPreviewComponent implements OnChanges {
     @Output() onActiveChange = new EventEmitter<number>();
 
     @ViewChild('previewImage') previewImage: ElementRef;
+    @ViewChild('pointsView') pointsView: ElementRef;
 
     private isOpen = false;
     private timer;
@@ -110,6 +117,7 @@ export class NgxGalleryPreviewComponent implements OnChanges {
     private initialLeft = 0;
     private initialTop = 0;
     private isMove = false;
+    private isImageLoaded = false;
 
     private keyDownListener: Function;
 
@@ -337,6 +345,14 @@ export class NgxGalleryPreviewComponent implements OnChanges {
         }
     }
 
+    getPointsContainerWidth() {
+        return this.sanitization.bypassSecurityTrustStyle(this.previewImage.nativeElement.offsetWidth + 'px');
+    }
+
+    getPointsContainerHeight() {
+        return this.sanitization.bypassSecurityTrustStyle(this.previewImage.nativeElement.offsetHeight + 'px');
+    }
+
     private getClientX(e): number {
         return e.touches && e.touches.length ? e.touches[0].clientX : e.clientX;
     }
@@ -418,6 +434,7 @@ export class NgxGalleryPreviewComponent implements OnChanges {
 
         setTimeout(() => {
             if (this.isLoaded(this.previewImage.nativeElement)) {
+                this.isImageLoaded = true;
                 this.loading = false;
                 this.startAutoPlay();
             } else {
@@ -425,9 +442,10 @@ export class NgxGalleryPreviewComponent implements OnChanges {
                     if (this.loading) {
                         this.showSpinner = true;
                     }
-                })
+                });
 
                 this.previewImage.nativeElement.onload = () => {
+                    this.isImageLoaded = true;
                     this.loading = false;
                     this.showSpinner = false;
                     this.previewImage.nativeElement.onload = null;
@@ -438,6 +456,8 @@ export class NgxGalleryPreviewComponent implements OnChanges {
     }
 
     private isLoaded(img): boolean {
+        console.log('is', this.previewImage.nativeElement.offsetWidth, this.previewImage.nativeElement.offsetHeight);
+
         if (!img.complete) {
             return false;
         }
