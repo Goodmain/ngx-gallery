@@ -398,8 +398,8 @@ export class NgxGalleryPreviewComponent implements OnChanges {
 
         const doc = <any>document;
 
-        if (doc.exitFullscreen) {
-            doc.exitFullscreen();
+        if (doc.fullscreenElement) {
+            doc.fullscreenElement();
         } else if (doc.msExitFullscreen) {
             doc.msExitFullscreen();
         } else if (doc.mozCancelFullScreen) {
